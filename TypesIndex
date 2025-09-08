@@ -1,0 +1,71 @@
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  avatar?: string;
+  location: {
+    city: string;
+    state: string;
+    coordinates: [number, number];
+  };
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  joinedDate: string;
+}
+
+export interface Listing {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  images: string[];
+  category: string;
+  condition: 'new' | 'like-new' | 'good' | 'fair' | 'poor';
+  seller: User;
+  location: {
+    city: string;
+    state: string;
+    coordinates: [number, number];
+    distance?: number;
+  };
+  postedDate: string;
+  saved: boolean;
+  pickupOptions: ('pickup' | 'delivery')[];
+  negotiable: boolean;
+}
+
+export interface Message {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface Chat {
+  id: string;
+  listing: Listing;
+  participant: User;
+  lastMessage: Message;
+  unreadCount: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  count: number;
+}
+
+export interface SearchFilters {
+  query: string;
+  category: string;
+  priceMin: number;
+  priceMax: number;
+  distance: number;
+  sortBy: 'newest' | 'nearest' | 'price-low' | 'price-high';
+  condition: string[];
+}
