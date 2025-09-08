@@ -1,0 +1,88 @@
+import React, { useState } from 'react';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
+import { HomePage } from './components/HomePage';
+import { PostItemPage } from './components/PostItemPage';
+import { MessagesPage } from './components/MessagesPage';
+import { MapView } from './components/MapView';
+import { ProfilePage } from './components/ProfilePage';
+
+function App() {
+  const [currentView, setCurrentView] = useState('home');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const handleViewChange = (view: string) => {
+    setCurrentView(view);
+    if (view !== 'home') {
+      setSelectedCategory('');
+    }
+    setIsSidebarOpen(false);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentView('home');
+    setIsSidebarOpen(false);
+  };
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'home':
+      case 'search':
+        return <HomePage selectedCategory={selectedCategory} />;
+      case 'post':
+        return <PostItemPage />;
+      case 'messages':
+        return <MessagesPage />;
+      case 'map':
+        return <MapView />;
+      case 'profile':
+        return <ProfilePage />;
+      case 'notifications':
+        return (
+          <div className="p-6">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Notifications
+            </h1>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <p className="text-gray-600 dark:text-gray-400 text-center">
+                No notifications yet. When someone messages you or shows interest in your items, 
+                you'll see notifications here.
+              </p>
+            </div>
+          </div>
+        );
+      default:
+        return <HomePage selectedCategory={selectedCategory} />;
+    }
+  };
+
+  return (
+    <ThemeProvider>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+        <Header
+          onMenuToggle={setIsSidebarOpen}
+          onViewChange={handleViewChange}
+          currentView={currentView}
+        />
+        
+        <div className="flex">
+          <Sidebar
+            isOpen={isSidebarOpen}
+            currentView={currentView}
+            onViewChange={handleViewChange}
+            onCategoryChange={handleCategoryChange}
+          />
+          
+          <main className="flex-1 lg:ml-64">
+            {renderCurrentView()}
+          </main>
+        </div>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
